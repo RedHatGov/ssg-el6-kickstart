@@ -24,7 +24,7 @@ fi
 /sbin/grubby --update-kernel=ALL --args="boot=${BOOT} fips=1"
 
 ########################################
-# Make SELinux Configuration BImmutable
+# Make SELinux Configuration Immutable
 ########################################
 chattr +i /etc/selinux/config
 
@@ -85,6 +85,16 @@ chmod 755 /etc/profile.d/vlock-alias.csh
 sed -i -re '/pam_wheel.so use_uid/s/^#//' /etc/pam.d/su
 sed -i 's/^#\s*\(%wheel\s*ALL=(ALL)\s*ALL\)/\1/' /etc/sudoers
 echo -e "\n## Set timeout for authentiation (5 Minutes)\nDefaults:ALL timestamp_timeout=5\n" >> /etc/sudoers
+
+########################################
+# SSHD Hardening
+########################################
+echo "MACs hmac-sha2-512,hmac-sha2-256,hmac-sha1" >> /etc/ssh/sshd_config
+echo "AllowGroups sshusers" >> /etc/ssh/sshd_config
+echo "MaxAuthTries 3" >> /etc/ssh/sshd_config
+if [ $(grep -c sshusers /etc/group) -eq 0 ]; then
+	/usr/sbin/groupadd sshusers &> /dev/null
+fi
 
 ########################################
 # Additional GNOME Hardening
