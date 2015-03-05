@@ -1,0 +1,108 @@
+###############################################################################
+# SCAP Security Guide RHEL 6 DVD CREATOR
+#
+# This script was written by Frank Caviggia, Red Hat Consulting
+# Last update was 5 March 2015
+# This script is NOT SUPPORTED by Red Hat Global Support Services.
+# Please contact Rick Tavares for more information.
+#
+# Author: Frank Caviggia (fcaviggi@redhat.com)
+# Copyright: Red Hat, (c) 2015
+# License: GPLv2
+# Description: Kickstart Installation of RHEL 6 with SSG
+###############################################################################
+
+
+ABOUT
+=====
+
+Modifies a RHEL 6.4+ x86_64 Workstation or Server DVD with a kickstart
+that will install a system that is configured and hardened for
+Red Hat Enterprise Linux 6. 
+
+The kickstart script involves the integration of the following projects 
+into a single installer:
+
+   - classification-banner.py (Python for displaying graphical classification banner)
+   
+        https://github.com/RedHatGov/classification-banner
+
+   - SCAP Security Guide (SSG) Content - Benchmark and hardening scripts for the system after installation
+   
+        https://github.com/OpenSCAP/scap-security-guide
+
+
+CONTENT
+=======
+
+createiso.sh - installation script to modify RHEL 6.4+ ISO image
+
+/config - Kickstarts, Python, and RPMs needed to modify image.
+
+	isolinux/
+
+		grub.conf - Menu Configuration for Kickstart
+
+		isolinux.cfg - Menu Configuration for Kickstart
+
+	stig-fix/
+
+		ssg-rhel.cfg
+		
+			Kickstart Configuration (Calls menu.py in %pre)
+		
+		menu.py
+		
+			Python Script that presents a graphical menu to modify the
+			kickstart. Contains the "Profiles" for configuring the 
+			system partitioning and packages.
+
+		classification-banner.py
+		
+			Graphical Classification Banner (for GNOME Desktops User/
+			Developer Workstation Profiles)
+
+		scap-security-guide-*.el6.noarch.rpm
+
+			Uses OpenSCAP and the SCAP Security Guide (SSG) to test and
+			remediate system.
+
+		ssg-suplemental.sh
+
+			Additional system lockdowns (FIPS 140-2 Kernel Mode, GNOME,
+			wheel group for root access, etc.)
+
+EXAMPLE
+=======
+
+# ./createiso.sh rhel-server-6.6-x86_64-dvd.iso 
+Mounting RHEL DVD Image...
+mount: /dev/loop0 is write-protected, mounting read-only
+Done.
+Copying RHEL DVD Image... Done.
+Modifying RHEL DVD Image... Done.
+Remastering RHEL DVD Image...
+I: -input-charset not specified, using utf-8 (detected in locale settings)
+Using RELEA000.HTM;1 for  /RELEASE-NOTES-ja-JP.html (RELEASE-NOTES-ta-IN.html)
+	<..........................................>
+Using POLIC003.RPM;1 for  ./Packages/policycoreutils-python-2.0.83-19.39.el6.x86_64.rpm (policycoreutils-newrole-2.0.83-19.39.el6.x86_64.rpm)
+Size of boot image is 4 sectors -> No emulation
+  0.27% done, estimate finish Tue Jan 21 22:04:41 2014
+	<...........................................>
+ 99.86% done, estimate finish Tue Jan 21 22:06:46 2014
+Total translation table size: 976326
+Total rockridge attributes bytes: 430528
+Total directory bytes: 661504
+Path table size(bytes): 286
+Max brk space used 3ee000
+1882600 extents written (3676 MB)
+Done.
+Signing RHEL DVD Image...
+Inserting md5sum into iso image...
+md5 = ec4618f4ccc6ccac3cfed291ef341012
+Inserting fragment md5sums into iso image...
+fragmd5 = e115ca49531d6adfee6caadeaf6a895cdc4c3e8b9341f58f5e11e9113a79
+frags = 20
+Setting supported flag to 0
+Done.
+DVD Created. [ssg-rhel.iso]
