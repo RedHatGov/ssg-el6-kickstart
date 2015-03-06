@@ -111,23 +111,17 @@ ALL: ALL
 EOF
 
 ########################################
-# AIDE Initialization
+# File Ownership 
 ########################################
-if [ ! -e /var/lib/aide/aide.db.gz ]; then
-	echo "Initializing AIDE database, this step may take quite a while!"
-	/usr/sbin/aide --init &> /dev/null
-	echo "AIDE database initialization complete."
-	cp /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
-fi
-cat <<EOF > /etc/cron.weekly/aide-report
+find / -nouser -print | xargs chown root
+find / -nogroup -print | xargs chown :root
+cat <<EOF > /etc/cron.daily/unowned_files
 #!/bin/sh
-# Weekly AIDE Report
-`/usr/sbin/aide --check > /var/log/aide/reports/$(hostname)-aide-report-$(date +%Y%m%d).txt`
+# Fix user and group ownership of files without user
+find / -nouser -print | xargs chown root
+find / -nogroup -print | xargs chown :root
 EOF
-chown root:root /etc/cron.weekly/aide-report
-chmod 555 /etc/cron.weekly/aide-report
-mkdir -p /var/log/aide/reports
-chmod 700 /var/log/aide/reports
+chown root:root /etc/cron.daily/unowned_files
 
 ########################################
 # Additional GNOME Hardening
@@ -251,3 +245,24 @@ gconftool-2 --direct \
 --type bool \
 --set /apps/panel/applets/clock/prefs/show_weather false
 fi
+
+chmod 0700 /etc/cron.daily/unowned_files
+
+########################################
+# AIDE Initialization
+########################################
+if [ ! -e /var/lib/aide/aide.db.gz ]; then
+	echo "Initializing AIDE database, this step may take quite a while!"
+	/usr/sbin/aide --init &> /dev/null
+	echo "AIDE database initialization complete."
+	cp /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
+fi
+cat <<EOF > /etc/cron.weekly/aide-report
+#!/bin/sh
+# Generate Weekly AIDE Report
+`/usr/sbin/aide --check > /var/log/aide/reports/$(hostname)-aide-report-$(date +%Y%m%d).txt`
+EOF
+chown root:root /etc/cron.weekly/aide-report
+chmod 555 /etc/cron.weekly/aide-report
+mkdir -p /var/log/aide/reports
+chmod 700 /var/log/aide/reports
