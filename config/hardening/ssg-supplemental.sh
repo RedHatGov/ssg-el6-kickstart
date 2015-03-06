@@ -111,6 +111,25 @@ ALL: ALL
 EOF
 
 ########################################
+# AIDE Initialization
+########################################
+if [ ! -e /var/lib/aide/aide.db.gz ]; then
+	echo "Initializing AIDE database, this step may take quite a while!"
+	/usr/sbin/aide --init &> /dev/null
+	echo "AIDE database initialization complete."
+	cp /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
+fi
+cat <<EOF > /etc/cron.weekly/aide-report
+#!/bin/sh
+# Weekly AIDE Report
+`/usr/sbin/aide --check > /var/log/aide/reports/$(hostname)-aide-report-$(date +%Y%m%d).txt`
+EOF
+chown root:root /etc/cron.weekly/aide-report
+chmod 555 /etc/cron.weekly/aide-report
+mkdir -p /var/log/aide/reports
+chmod 700 /var/log/aide/reports
+
+########################################
 # Additional GNOME Hardening
 ########################################
 if [ -x /usr/bin/gconftool-2 ]; then
