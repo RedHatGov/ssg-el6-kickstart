@@ -97,6 +97,20 @@ if [ $(grep -c sshusers /etc/group) -eq 0 ]; then
 fi
 
 ########################################
+# TCP_WRAPPERS
+########################################
+cat <<EOF >> /etc/hosts.allow
+# LOCALHOST (ALL TRAFFIC ALLOWED) DO NOT REMOVE FOLLOWING LINE
+ALL: 127.0.0.1 [::1]
+# Allow SSH (you can limit this further using IP addresses - e.g. 192.168.0.*)
+sshd: ALL
+EOF
+cat <<EOF >> /etc/hosts.deny
+# Deny All by Default
+ALL: ALL
+EOF
+
+########################################
 # Additional GNOME Hardening
 ########################################
 if [ -x /usr/bin/gconftool-2 ]; then
