@@ -758,7 +758,7 @@ class Display_Menu:
 			# Post Configuration
 			f = open('/tmp/hardening-post','w')
 			# Run Hardening Script
-			f.write('/sbin/system-hardening -q &> /dev/null')
+			f.write('/usr/bin/oscap xccdf eval --profile '+str(self.profile)+' --remediate --results /root/`hostname`-ssg-results.xml  --cpe /usr/share/xml/scap/ssg/content/ssg-rhel6-cpe-dictionary.xml /usr/share/xml/scap/ssg/content/ssg-rhel6-xccdf.xml\n')
 			# RHN Satellite requires umask of 022 for installation
 			f.write('sed -i "/umask/ c\umask 022" /etc/profile\n')
 			f.close()
@@ -792,7 +792,7 @@ class Display_Menu:
 			# Post Configuration
 			f = open('/tmp/hardening-post','w')
 			# Run Hardening Script
-			f.write('/sbin/system-hardening -q &> /dev/null')
+			f.write('/usr/bin/oscap xccdf eval --profile '+str(self.profile)+' --remediate --results /root/`hostname`-ssg-results.xml  --cpe /usr/share/xml/scap/ssg/content/ssg-rhel6-cpe-dictionary.xml /usr/share/xml/scap/ssg/content/ssg-rhel6-xccdf.xml\n')
 			f.close()
 			# Package Selection
 			f = open('/tmp/hardening-packages','w')
