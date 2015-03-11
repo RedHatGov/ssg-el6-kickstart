@@ -141,8 +141,8 @@ class Display_Menu:
 		self.system_profile.append_text("Minimal Installation")
 		self.system_profile.append_text("User Workstation")
 		self.system_profile.append_text("Developer Workstation")
-		self.system_profile.append_text("RHN Satellite 5.x Server")
-		self.system_profile.append_text("RHN Satellite 6.x Server")
+		self.system_profile.append_text("RHN Satellite 5.7 Server")
+		self.system_profile.append_text("RHN Satellite 6.0 Server")
 		self.system_profile.append_text("Proprietary Database Server")
 		self.system_profile.append_text("RHEV-Attached KVM Server")
 		#self.system_profile.append_text("Standalone KVM Server")
@@ -705,17 +705,17 @@ class Display_Menu:
 
 
 		################################################################################################################
-		# RHN Satellite 5.x Install
+		# RHN Satellite 5.7 Install
 		################################################################################################################
 		if int(self.system_profile.get_active()) == 3:
 			# Partitioning
 			if self.disk_total < 120:
 				self.MessageBox(self.window,"<b>Recommended minimum of 120Gb disk space for a RHN Satelite Server!</b>\n\n You have "+str(self.disk_total)+"Gb available.",gtk.MESSAGE_WARNING)
-			self.opt_partition.set_value(0)
+			self.opt_partition.set_value(20)
 			self.www_partition.set_value(3)
 			self.swap_partition.set_value(1)
 			self.tmp_partition.set_value(2)
-			self.var_partition.set_value(80)
+			self.var_partition.set_value(60)
 			self.log_partition.set_value(3)
 			self.audit_partition.set_value(3)
 			self.home_partition.set_value(3)
@@ -742,11 +742,11 @@ class Display_Menu:
 			# Partitioning
 			if self.disk_total < 120:
 				self.MessageBox(self.window,"<b>Recommended minimum of 120Gb disk space for a RHN Satelite Server!</b>\n\n You have "+str(self.disk_total)+"Gb available.",gtk.MESSAGE_WARNING)
-			self.opt_partition.set_value(70)
+			self.opt_partition.set_value(20)
 			self.www_partition.set_value(3)
 			self.swap_partition.set_value(1)
 			self.tmp_partition.set_value(2)
-			self.var_partition.set_value(10)
+			self.var_partition.set_value(60)
 			self.log_partition.set_value(3)
 			self.audit_partition.set_value(3)
 			self.home_partition.set_value(3)
@@ -759,8 +759,6 @@ class Display_Menu:
 			f = open('/tmp/hardening-post','w')
 			# Run Hardening Script
 			f.write('/usr/bin/oscap xccdf eval --profile '+str(self.profile)+' --remediate --results /root/`hostname`-ssg-results.xml  --cpe /usr/share/xml/scap/ssg/content/ssg-rhel6-cpe-dictionary.xml /usr/share/xml/scap/ssg/content/ssg-rhel6-xccdf.xml\n')
-			# RHN Satellite requires umask of 022 for installation
-			f.write('sed -i "/umask/ c\umask 022" /etc/profile\n')
 			f.close()
 			# Package Selection
 			f = open('/tmp/hardening-packages','w')
@@ -823,10 +821,8 @@ class Display_Menu:
 			f.write('ksh\n')
 			f.close()
 			
-			
-			
 		################################################################################################################
-		# RHEV-Attached KVM Server (HARDENING SCRIPT NOT RUN UNTIL AFTER CONNECTION TO RHEVM SERVER)
+		# RHEV-Attached KVM Server
 		################################################################################################################
 		if int(self.system_profile.get_active()) == 6:
 			# WARNING - HARDENDING SCRIPT NOT RUN!
