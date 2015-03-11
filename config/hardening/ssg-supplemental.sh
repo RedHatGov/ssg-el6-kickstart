@@ -180,6 +180,7 @@ find / -nouser -print | xargs chown root
 find / -nogroup -print | xargs chown :root
 EOF
 chown root:root /etc/cron.daily/unowned_files
+chmod 0700 /etc/cron.daily/unowned_files
 
 ########################################
 # Additional GNOME Hardening
@@ -303,8 +304,6 @@ gconftool-2 --direct \
 --type bool \
 --set /apps/panel/applets/clock/prefs/show_weather false
 fi
-
-chmod 0700 /etc/cron.daily/unowned_files
 
 ########################################
 # AIDE Initialization
