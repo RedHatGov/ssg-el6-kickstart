@@ -73,6 +73,13 @@ createiso.sh - installation script to modify RHEL 6.4+ ISO image
 			Additional system lockdowns (FIPS 140-2 Kernel Mode, GNOME,
 			wheel group for root access, etc.)
 
+		rhevm-preinstall.sh
+		rhevm-postinstall.sh
+
+			Scripts to losen settings temporararily to allow registration
+			of the system with RHEV-M by allowing root login and allowing
+			exec in /tmp. Run rhevm-postinstall.sh after system is added
+			into RHEV-M
 
 HARDENING INFORMATION
 =====================
