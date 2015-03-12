@@ -2,7 +2,7 @@
 # Graphical Kickstart Script
 #
 # This script was written by Frank Caviggia, Red Hat Consulting
-# Last update was 11 March 2015
+# Last update was 12 March 2015
 # This script is NOT SUPPORTED by Red Hat Global Support Services.
 # Please contact Rick Tavares for more information.
 #
@@ -852,7 +852,7 @@ class Display_Menu:
 			f.close()
 			# Package Selection
 			f = open('/tmp/hardening-packages','w')
-			f.write('')
+			f.write('ebtables')
 			f.close()
 
 
@@ -892,6 +892,7 @@ class Display_Menu:
 			f.write('qemu-kvm-tools\n')
 			f.write('fence-virtd-libvirt\n')
 			f.write('virt-v2v\n')
+			f.write('ebtables\n')
 			f.write('libguestfs-tools\n')
 			f.close()
 
