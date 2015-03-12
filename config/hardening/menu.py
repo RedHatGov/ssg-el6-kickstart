@@ -2,7 +2,7 @@
 # Graphical Kickstart Script
 #
 # This script was written by Frank Caviggia, Red Hat Consulting
-# Last update was 5 October 2015
+# Last update was 11 March 2015
 # This script is NOT SUPPORTED by Red Hat Global Support Services.
 # Please contact Rick Tavares for more information.
 #
@@ -826,7 +826,7 @@ class Display_Menu:
 		################################################################################################################
 		if int(self.system_profile.get_active()) == 6:
 			# WARNING - HARDENDING SCRIPT NOT RUN!
- 			self.MessageBox(self.window,"<b>Warning:</b> SSH has root login enabled. Please run the following after registering with the RHEV-M system:\n\n   # vi /etc/ssh/sshd_config\n\n      Change 'PermitRootLogin yes' to 'PermiitRootLogin no' \n\n   # service sshd restart",gtk.MESSAGE_WARNING)
+ 			self.MessageBox(self.window,"<b>Warning:</b> Please run the following script before adding system RHEV-M:\n\n   # /root/rhevm-preinstall.sh\n\nAfter adding the system to RHEV-M, run the following:\n\n   # /root/rhevm-postinstall.sh",gtk.MESSAGE_WARNING)
 			# Partitioning
 			if self.disk_total < 60:
 				self.MessageBox(self.window,"<b>Recommended minimum of 60Gb disk space for a RHEV-Attached KVM Server Install!</b>\n\n You have "+str(self.disk_total)+"Gb available.",gtk.MESSAGE_WARNING)
@@ -847,8 +847,8 @@ class Display_Menu:
 			f = open('/tmp/hardening-post','w')
 			# Run Hardening Script
 			f.write('/usr/bin/oscap xccdf eval --profile '+str(self.profile)+' --remediate --results /root/`hostname`-ssg-results.xml  --cpe /usr/share/xml/scap/ssg/content/ssg-rhel6-cpe-dictionary.xml /usr/share/xml/scap/ssg/content/ssg-rhel6-xccdf.xml\n')
-			# Allow 'root' to login via SSH - Required by RHEV-M
-			f.write('sed -i "/^PermitRootLogin/ c\PermitRootLogin yes" /etc/ssh/sshd_config')
+			# RHEV Scripts for Pre-Install/Post-Install
+			f.write('cp /root/hardening /root/')
 			f.close()
 			# Package Selection
 			f = open('/tmp/hardening-packages','w')
