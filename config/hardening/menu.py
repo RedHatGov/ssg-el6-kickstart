@@ -141,6 +141,7 @@ class Display_Menu:
 		self.system_profile.append_text("Minimal Installation")
 		self.system_profile.append_text("User Workstation")
 		self.system_profile.append_text("Developer Workstation")
+		self.system_profile.append_text("IdM Authentication Server")
 		self.system_profile.append_text("RHN Satellite 5.7 Server")
 		self.system_profile.append_text("RHN Satellite 6.0 Server")
 		self.system_profile.append_text("Proprietary Database Server")
@@ -705,9 +706,40 @@ class Display_Menu:
 
 
 		################################################################################################################
-		# RHN Satellite 5.7 Install
+		# IdM/IPA Authentication Server
 		################################################################################################################
 		if int(self.system_profile.get_active()) == 3:
+			# Partitioning
+			if self.disk_total < 8:
+				self.MessageBox(self.window,"<b>Recommended minimum of 10Gb disk space for a IdM Authentication Server Install!</b>\n\n You have "+str(self.disk_total)+"Gb available.",gtk.MESSAGE_WARNING)
+			self.opt_partition.set_value(0)
+			self.www_partition.set_value(5)
+			self.swap_partition.set_value(5)
+			self.tmp_partition.set_value(10)
+			self.var_partition.set_value(10)
+			self.log_partition.set_value(10)
+			self.audit_partition.set_value(10)
+			self.home_partition.set_value(15)
+			self.root_partition.set_value(35)
+			# Post Configuration (nochroot)
+			f = open('/tmp/hardening-post-nochroot','w')
+			f.write('')
+			f.close()
+			# Post Configuration
+			f = open('/tmp/hardening-post','w')
+			# Run Hardening Script
+			f.write('/usr/bin/oscap xccdf eval --profile '+str(self.profile)+' --remediate --results /root/`hostname`-ssg-results.xml  --cpe /usr/share/xml/scap/ssg/content/ssg-rhel6-cpe-dictionary.xml /usr/share/xml/scap/ssg/content/ssg-rhel6-xccdf.xml\n')
+			f.close()
+			# Package Selection
+			f = open('/tmp/hardening-packages','w')
+			f.write('ipa-server')
+			f.close()
+
+
+		################################################################################################################
+		# RHN Satellite 5.7 Install
+		################################################################################################################
+		if int(self.system_profile.get_active()) == 4:
 			# Partitioning
 			if self.disk_total < 120:
 				self.MessageBox(self.window,"<b>Recommended minimum of 120Gb disk space for a RHN Satelite Server!</b>\n\n You have "+str(self.disk_total)+"Gb available.",gtk.MESSAGE_WARNING)
@@ -738,7 +770,7 @@ class Display_Menu:
 		################################################################################################################
 		# RHN Satellite 6.x Install
 		################################################################################################################
-		if int(self.system_profile.get_active()) == 4:
+		if int(self.system_profile.get_active()) == 5:
 			# Partitioning
 			if self.disk_total < 120:
 				self.MessageBox(self.window,"<b>Recommended minimum of 120Gb disk space for a RHN Satelite Server!</b>\n\n You have "+str(self.disk_total)+"Gb available.",gtk.MESSAGE_WARNING)
@@ -769,7 +801,7 @@ class Display_Menu:
 		################################################################################################################
 		# Proprietary Database
 		################################################################################################################
-		if int(self.system_profile.get_active()) == 5:
+		if int(self.system_profile.get_active()) == 6:
 			# Partitioning
 			if self.disk_total < 60:
 				self.MessageBox(self.window,"<b>Recommended minimum of 60Gb disk space for a Proprietary Database Server!</b>\n\n You have "+str(self.disk_total)+"Gb available.",gtk.MESSAGE_WARNING)
@@ -824,7 +856,7 @@ class Display_Menu:
 		################################################################################################################
 		# RHEV-Attached KVM Server
 		################################################################################################################
-		if int(self.system_profile.get_active()) == 6:
+		if int(self.system_profile.get_active()) == 7:
 			# WARNING - HARDENDING SCRIPT NOT RUN!
  			self.MessageBox(self.window,"<b>Warning:</b> Please run the following script before adding system RHEV-M:\n\n   # /root/rhevm-preinstall.sh\n\nAfter adding the system to RHEV-M, run the following:\n\n   # /root/rhevm-postinstall.sh",gtk.MESSAGE_WARNING)
 			# Partitioning
@@ -859,7 +891,7 @@ class Display_Menu:
 		################################################################################################################
 		# Standalone KVM Installation
 		################################################################################################################
-		if int(self.system_profile.get_active()) == 7:
+		if int(self.system_profile.get_active()) == 8:
 			# Partitioning
 			if self.disk_total < 60:
 				self.MessageBox(self.window,"<b>Recommended minimum 60Gb disk space for a RHEL/KVM Server!</b>\n\n You have "+str(self.disk_total)+"Gb available.",gtk.MESSAGE_WARNING)
@@ -900,7 +932,7 @@ class Display_Menu:
 		################################################################################################################
 		# Apache HTTP (Web Server)
 		################################################################################################################
-		if int(self.system_profile.get_active()) == 8:
+		if int(self.system_profile.get_active()) == 9:
 			# Partitioning
 			if self.disk_total < 10:
 				self.MessageBox(self.window,"<b>Recommended minimum of 10Gb disk space for a Web Server!</b>\n\n You have "+str(self.disk_total)+"Gb available.",gtk.MESSAGE_WARNING)
@@ -931,7 +963,7 @@ class Display_Menu:
 		################################################################################################################
 		# Apache Tomcat
 		################################################################################################################
-		if int(self.system_profile.get_active()) == 9:
+		if int(self.system_profile.get_active()) == 10:
 			# Partitioning
 			if self.disk_total < 10:
 				self.MessageBox(self.window,"<b>Recommended minimum of 10Gb disk space for an Apache Tomcat Web Server!</b>\n\n You have "+str(self.disk_total)+"Gb available.",gtk.MESSAGE_WARNING)
@@ -962,7 +994,7 @@ class Display_Menu:
 		################################################################################################################
 		# PostgreSQL Database
 		################################################################################################################
-		if int(self.system_profile.get_active()) == 10:
+		if int(self.system_profile.get_active()) == 11:
 			# Partitioning
 			if self.disk_total < 16:
 				self.MessageBox(self.window,"<b>Recommended minimum of 16Gb disk space for a PostgreSQL Database Server!</b>\n\n You have "+str(self.disk_total)+"Gb available.",gtk.MESSAGE_WARNING)
@@ -993,7 +1025,7 @@ class Display_Menu:
 		################################################################################################################
 		# MySQL Database
 		################################################################################################################
-		if int(self.system_profile.get_active()) == 11:
+		if int(self.system_profile.get_active()) == 12:
 			# Partitioning
 			if self.disk_total < 16:
 				self.MessageBox(self.window,"<b>Recommended minimum of 16Gb disk space for a MariaDB Database Server!</b>\n\n You have "+str(self.disk_total)+"Gb available.",gtk.MESSAGE_WARNING)
