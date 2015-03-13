@@ -2,7 +2,7 @@
 # Graphical Kickstart Script
 #
 # This script was written by Frank Caviggia, Red Hat Consulting
-# Last update was 12 March 2015
+# Last update was 13 March 2015
 # This script is NOT SUPPORTED by Red Hat Global Support Services.
 # Please contact Rick Tavares for more information.
 #
@@ -421,8 +421,6 @@ class Display_Menu:
 		f.write('')
 		f.close()
 
-
-
 	# Key Press Event
 	def event_key(self,args,event):
 		if event.keyval == gtk.keysyms.F12:	
@@ -455,7 +453,11 @@ class Display_Menu:
 			self.profile='stig-rhel6-server-upstream'
 		if int(self.system_security.get_active()) == 1:
 			self.profile='usgcb-rhel6-server'
-
+			if int(self.system_classification.get_active()) > 1:
+				# WARNING - Classification Requires DISA STIG
+ 				self.MessageBox(self.window,"<b>Warning:</b> DISA STIG is requred for the Classification of the System Specified!",gtk.MESSAGE_WARNING)
+				self.system_security.set_active(0)
+				self.profile='stig-rhel6-server-upstream'	
 
 		################################################################################################################
 		# Minimal (Defualts to Kickstart)
