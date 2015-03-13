@@ -735,6 +735,11 @@ class Display_Menu:
 			# Package Selection
 			f = open('/tmp/hardening-packages','w')
 			f.write('ipa-server')
+			f.write('ipa-server-selinux')
+			f.write('ipa-admintools')
+			f.write('ipa-client')
+			f.write('nfs-utils')
+			f.write('nfs-utils-lib')
 			f.close()
 
 
