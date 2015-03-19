@@ -325,28 +325,32 @@ cat <<EOF > /etc/init.d/clean_system
 # @AUTHOR: Frank Caviggia
 # @EMAIL: fcaviggi@redhat.com
 # @COPYRIGHT: Red Hat, (c) 2013
+
 clean() {
+
 	# Scrub Swap Space
-	`mount | grep -q swap`
+	mount | grep -q swap &>/dev/null
 	if [ $? -eq 0 ]; then
 		echo -n "Scrubing Swap Space... "
-		for swp in `grep partition /proc/swaps | awk '{ print $1 }'`; do
-			`/sbin/swapoff ${swp}` &> /dev/null
-			`/usr/bin/scrub -S -f -p dod ${swp}` &> /dev/null
+		for swp in \$(grep partition /proc/swaps | awk '{ print $1 }'); do
+			/sbin/swapoff \${swp} &> /dev/null
+			/usr/bin/scrub -S -f -p dod \${swp} &> /dev/null
 		done
 		echo "Finished."
 	fi
+
 	# Scrub Temp Files
 	echo -n "Scrubing '/tmp' directory... "
 	/usr/bin/find /tmp -type f -exec /usr/bin/scrub -S -f -r -p dod {} \; &> /dev/null
 	echo "Finished."
+
 	# Scrub Temp Files
 	echo -n "Scrubing '/var/tmp' directory... "
 	/usr/bin/find /var/tmp -type f -exec /usr/bin/scrub -S -f -r -p dod {} \; &> /dev/null
 	echo "Finished."
 }
 
-case "$1" in
+case "\$1" in
 	start)
 		clean
 		echo
