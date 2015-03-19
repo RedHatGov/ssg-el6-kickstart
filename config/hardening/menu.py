@@ -1194,6 +1194,8 @@ class Display_Menu:
 			f.write('network --device eth0 --bootproto dhcp --noipv6 --hostname '+self.hostname.get_text()+'\n')
 			f.write('rootpw --iscrypted '+str(self.password)+'\n')
 			f.write('bootloader --location=mbr --driveorder='+str(self.data["INSTALL_DRIVES"])+' --append="crashkernel=auto rhgb quiet audit=1" --password='+str(self.a)+'\n')
+			f.close()
+			f = open('/tmp/partitioning','w')
 			if self.data["IGNORE_DRIVES"] != "":
 				f.write('ignoredisk --drives='+str(self.data["IGNORE_DRIVES"])+'\n')
 			f.write('zerombr\n')
@@ -1217,8 +1219,8 @@ class Display_Menu:
 				f.write('logvol /var/www --fstype=ext4 --name=lv_www --vgname=vg1 --size=512 --grow --percent='+str(self.www_partition.get_value_as_int())+'\n')
 			f.close()
 			gtk.main_quit()
-			
-		
+
+
 # Executes Window Display
 if __name__ == "__main__":
 	window = Display_Menu()
