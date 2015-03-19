@@ -2,7 +2,7 @@
 # Graphical Kickstart Script
 #
 # This script was written by Frank Caviggia, Red Hat Consulting
-# Last update was 13 March 2015
+# Last update was 19 March 2015
 # This script is NOT SUPPORTED by Red Hat Global Support Services.
 # Please contact Rick Tavares for more information.
 #
@@ -767,6 +767,8 @@ class Display_Menu:
 			f = open('/tmp/hardening-post','w')
 			# Run Hardening Script
 			f.write('/usr/bin/oscap xccdf eval --profile '+str(self.profile)+' --remediate --results /root/`hostname`-ssg-results.xml  --cpe /usr/share/xml/scap/ssg/content/ssg-rhel6-cpe-dictionary.xml /usr/share/xml/scap/ssg/content/ssg-rhel6-xccdf.xml\n')
+			# RHN Satellite requires umask of 022 for installation only for root
+			f.write('sed -i ":a;N;$!ba;s/077/022/2" /etc/profile\n')
 			f.close()
 			# Package Selection
 			f = open('/tmp/hardening-packages','w')
@@ -798,6 +800,8 @@ class Display_Menu:
 			f = open('/tmp/hardening-post','w')
 			# Run Hardening Script
 			f.write('/usr/bin/oscap xccdf eval --profile '+str(self.profile)+' --remediate --results /root/`hostname`-ssg-results.xml  --cpe /usr/share/xml/scap/ssg/content/ssg-rhel6-cpe-dictionary.xml /usr/share/xml/scap/ssg/content/ssg-rhel6-xccdf.xml\n')
+			# RHN Satellite requires umask of 022 for installation only for root
+			f.write('sed -i ":a;N;$!ba;s/077/022/2" /etc/profile\n')
 			f.close()
 			# Package Selection
 			f = open('/tmp/hardening-packages','w')
