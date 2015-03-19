@@ -1,6 +1,6 @@
 #!/bin/sh
 # This script was written by Frank Caviggia, Red Hat Consulting
-# Last update was 5 March 2015
+# Last update was 19 March 2015
 # This script is NOT SUPPORTED by Red Hat Global Support Services.
 # Please contact Rick Tavares for more information.
 #
@@ -304,6 +304,70 @@ gconftool-2 --direct \
 --type bool \
 --set /apps/panel/applets/clock/prefs/show_weather false
 fi
+
+########################################
+# Securely Clean Swap and Temp Files
+########################################
+cat <<EOF > /etc/init.d/clean_system
+#!/bin/sh
+# clean_system Securely cleans swap and temporary directories on shutdown with scrub
+# chkconfig: 06 0 99
+# description: Securely cleans swap and temporary directories (/tmp, /var/tmp)
+# on shutdown with scrub
+## BEGIN INIT INFO
+# Provides: clean-system
+# Required-Start:
+# Required-Stop:
+# Default-Start: 0 6
+# Default-Stop: 1 2 3 4 5
+## END INIT INFO
+# @NAME: SECURE SYSTEM CLEANING SCRIPT
+# @AUTHOR: Frank Caviggia
+# @EMAIL: fcaviggi@redhat.com
+# @COPYRIGHT: Red Hat, (c) 2013
+clean() {
+	# Scrub Swap Space
+	`mount | grep -q swap`
+	if [ $? -eq 0 ]; then
+		echo -n "Scrubing Swap Space... "
+		for swp in `grep partition /proc/swaps | awk '{ print $1 }'`; do
+			`/sbin/swapoff ${swp}` &> /dev/null
+			`/usr/bin/scrub -S -f -p dod ${swp}` &> /dev/null
+		done
+		echo "Finished."
+	fi
+	# Scrub Temp Files
+	echo -n "Scrubing '/tmp' directory... "
+	/usr/bin/find /tmp -type f -exec /usr/bin/scrub -S -f -r -p dod {} \; &> /dev/null
+	echo "Finished."
+	# Scrub Temp Files
+	echo -n "Scrubing '/var/tmp' directory... "
+	/usr/bin/find /var/tmp -type f -exec /usr/bin/scrub -S -f -r -p dod {} \; &> /dev/null
+	echo "Finished."
+}
+
+case "$1" in
+	start)
+		clean
+		echo
+		;;
+	*)
+		exit 0
+		;;
+esac
+
+exit 0
+EOF
+chmod 555 /etc/init.d/clean_system
+chown root:root /etc/init.d/clean_system
+chcon -u system_u -t initrc_exec_t /etc/init.d/clean_system
+rpm -q scrub &>/dev/null
+if [ $? -eq 0 ]; then
+	/sbin/chkconfig --add clean_system
+	/sbin/chkconfig --level 06 clean_system on
+	/sbin/chkconfig --level 12345 clean_system off
+fi
+
 
 ########################################
 # AIDE Initialization
