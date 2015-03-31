@@ -2,7 +2,7 @@
 # Graphical Kickstart Script
 #
 # This script was written by Frank Caviggia, Red Hat Consulting
-# Last update was 19 March 2015
+# Last update was 30 March 2015
 # This script is NOT SUPPORTED by Red Hat Global Support Services.
 # Please contact Rick Tavares for more information.
 #
@@ -156,7 +156,6 @@ class Display_Menu:
                 self.system.pack_start(self.system_profile,False,True,0)
 		self.vbox.add(self.system)
 
-
                 self.classification = gtk.HBox()
 		self.label = gtk.Label("                                                                               System Classification: ")
                 self.classification.pack_start(self.label,False,True, 0)
@@ -281,10 +280,16 @@ class Display_Menu:
 		self.label = gtk.Label("                             ")
                 self.encrypt.pack_start(self.label, False, True, 0)
 
-
 		self.encrypt_disk = gtk.CheckButton('Encrypt Drives with LUKS')
 		self.encrypt_disk.set_active(True)
 		self.encrypt.pack_start(self.encrypt_disk, False, True, 0)
+
+		self.label = gtk.Label("   ")
+                self.encrypt.pack_start(self.label, False, True, 0)
+
+		self.fips_kernel = gtk.CheckButton('Kernel in FIPS 140-2 Mode')
+		self.fips_kernel.set_active(True)
+		self.encrypt.pack_start(self.fips_kernel, False, True, 0)
 
 		self.vbox.add(self.encrypt)
 
@@ -436,6 +441,9 @@ class Display_Menu:
 
 	# System Profile Configuration
 	def configure_system_profile(self,args):
+
+		# Turn on FIPS 140-2 mode for Kernel (Default)
+		self.fips_kernel.set_active(True)
 
 		# Zero out partitioning values
 		self.opt_partition.set_value(0)
@@ -711,6 +719,8 @@ class Display_Menu:
 		# IdM/IPA Authentication Server
 		################################################################################################################
 		if int(self.system_profile.get_active()) == 3:
+			# Turn off FIPS 140-2 mode for Kernel
+			self.fips_kernel.set_active(False)
 			# Partitioning
 			if self.disk_total < 8:
 				self.MessageBox(self.window,"<b>Recommended minimum of 10Gb disk space for a IdM Authentication Server Install!</b>\n\n You have "+str(self.disk_total)+"Gb available.",gtk.MESSAGE_WARNING)
@@ -768,7 +778,7 @@ class Display_Menu:
 			# Run Hardening Script
 			f.write('/usr/bin/oscap xccdf eval --profile '+str(self.profile)+' --remediate --results /root/`hostname`-ssg-results.xml  --cpe /usr/share/xml/scap/ssg/content/ssg-rhel6-cpe-dictionary.xml /usr/share/xml/scap/ssg/content/ssg-rhel6-xccdf.xml\n')
 			# RHN Satellite requires umask of 022 for installation only for root
-			f.write('sed -i \':a;N;$!ba;s/077/022/2\' /etc/profile\n')
+			f.write('cat "umask 022" >> /root/.bashrc\n')
 			f.close()
 			# Package Selection
 			f = open('/tmp/hardening-packages','w')
@@ -801,7 +811,7 @@ class Display_Menu:
 			# Run Hardening Script
 			f.write('/usr/bin/oscap xccdf eval --profile '+str(self.profile)+' --remediate --results /root/`hostname`-ssg-results.xml  --cpe /usr/share/xml/scap/ssg/content/ssg-rhel6-cpe-dictionary.xml /usr/share/xml/scap/ssg/content/ssg-rhel6-xccdf.xml\n')
 			# RHN Satellite requires umask of 022 for installation only for root
-			f.write('sed -i \':a;N;$!ba;s/077/022/2\' /etc/profile\n')
+			f.write('cat "umask 022" >> /root/.bashrc\n')
 			f.close()
 			# Package Selection
 			f = open('/tmp/hardening-packages','w')
@@ -1062,6 +1072,17 @@ class Display_Menu:
 			f = open('/tmp/hardening-packages','w')
 			f.write('mysql-server\n')
 			f.close()
+
+
+		################################################################################################################
+		# FIPS 140-2 Configuration
+		################################################################################################################
+		if self.fips_kernel.get_active() == True:			
+			f = open('/tmp/hardening-post','a')
+			# Enable FIPS 140-2 mode in Kernel
+			f.write('/root/hardening/fips-kernel-mode.sh\n')
+			f.close()
+
 
 	# Check LVM Partitioning
 	def lvm_check(self,args):

@@ -6,22 +6,109 @@
 #
 # Script: ssg-suplemental.sh (system-hardening)
 # Description: RHEL 6 Hardening Supplemental to SSG
-# License: GPL (see COPYING)
+# License: GPL (see COPYINGt)
 # Copyright: Red Hat Consulting, March 2015
 # Author: Frank Caviggia <fcaviggi (at) redhat.com>
 
 ########################################
-# FIPS 140-2 Kernel Mode
+# DISA STIG PAM Configurations
 ########################################
-sed -i 's/PRELINKING=yes/PRELINKING=no/g' /etc/sysconfig/prelink
-prelink -u -a
-dracut -f
-if [ -e /sys/firmware/efi ]; then
-	BOOT=`df /boot/efi | tail -1 | awk '{print $1 }'`
-else
-	BOOT=`df /boot | tail -1 | awk '{ print $1 }'`
-fi
-/sbin/grubby --update-kernel=ALL --args="boot=${BOOT} fips=1"
+cat <<EOF > /etc/pam.d/system-auth-local
+#%PAM-1.0
+auth required pam_env.so
+auth required pam_lastlog.so inactive=35
+auth required pam_faillock.so preauth silent audit deny=3 even_deny_root root_unlock_time=900 unlock_time=604800 fail_interval=900
+auth sufficient pam_unix.so try_first_pass
+auth [default=die] pam_faillock.so authfail audit deny=3 even_deny_root root_unlock_time=900 unlock_time=604800 fail_interval=900
+auth sufficient pam_faillock.so authsucc audit deny=3 even_deny_root root_unlock_time=900 unlock_time=604800 fail_interval=900
+auth requisite pam_succeed_if.so uid >= 500 quiet
+auth required pam_deny.so
+
+account required pam_faillock.so
+account required pam_unix.so
+account required pam_lastlog.so inactive=35
+account sufficient pam_localuser.so
+account sufficient pam_succeed_if.so uid < 500 quiet
+account required pam_permit.so
+
+#password required pam_passwdqc.so min=disabled,disabled,16,12,8 random=42
+password required pam_cracklib.so retry=3 minlen=14 dcredit=-1 ucredit=-1 ocredit=-1 lcredit=-1 difok=3 maxrepeat=3
+password sufficient pam_unix.so sha512 shadow try_first_pass use_authtok remember=24
+password required pam_deny.so
+
+session required pam_lastlog.so showfailed
+session optional pam_keyinit.so revoke
+session required pam_limits.so
+session [success=1 default=ignore] pam_succeed_if.so service in crond quiet use_uid
+session required pam_unix.so
+EOF
+ln -sf /etc/pam.d/system-auth-local /etc/pam.d/system-auth
+cp -f /etc/pam.d/system-auth-local /etc/system-auth-ac
+
+cat <<EOF > /etc/pam.d/password-auth-local
+#%PAM-1.0
+auth required pam_env.so
+auth required pam_lastlog.so inactive=35
+auth required pam_faillock.so preauth silent audit deny=3 even_deny_root root_unlock_time=900 unlock_time=604800 fail_interval=900
+auth sufficient pam_unix.so try_first_pass
+auth [default=die] pam_faillock.so authfail audit deny=3 even_deny_root root_unlock_time=900 unlock_time=604800 fail_interval=900
+auth sufficient pam_faillock.so authsucc audit deny=3 even_deny_root root_unlock_time=900 unlock_time=604800 fail_interval=900
+auth requisite pam_succeed_if.so uid >= 500 quiet
+auth required pam_deny.so
+
+account required pam_faillock.so
+account required pam_unix.so
+account required pam_lastlog.so inactive=35
+account sufficient pam_localuser.so
+account sufficient pam_succeed_if.so uid < 500 quiet
+account required pam_permit.so
+
+#password required pam_passwdqc.so min=disabled,disabled,16,12,8 random=42
+password required pam_cracklib.so retry=3 minlen=14 dcredit=-1 ucredit=-1 ocredit=-1 lcredit=-1 difok=3 maxrepeat=3
+password sufficient pam_unix.so sha512 shadow try_first_pass use_authtok remember=24
+password required pam_deny.so
+
+session required pam_lastlog.so showfailed
+session optional pam_keyinit.so revoke
+session required pam_limits.so
+session [success=1 default=ignore] pam_succeed_if.so service in crond quiet use_uid
+session required pam_unix.so
+EOF
+ln -sf /etc/pam.d/password-auth-local /etc/pam.d/password-auth
+cp -f /etc/pam.d/password-auth-local /etc/pam.d/password-auth-ac
+
+cat <<EOF > /etc/pam.d/gnome-screensaver
+%PAM-1.0
+auth [success=done ignore=ignore default=bad] pam_selinux_permit.so
+auth required pam_env.so
+auth required pam_lastlog.so
+auth required pam_faillock.so preauth silent audit deny=3 even_deny_root root_unlock_time=900 unlock_time=604800 fail_interval=900
+auth sufficient pam_unix.so try_first_pass
+auth [default=die] pam_faillock.so authfail audit deny=3 even_deny_root root_unlock_time=900 unlock_time=604800 fail_interval=900
+auth sufficient pam_faillock.so authsucc audit deny=3 even_deny_root root_unlock_time=900 unlock_time=604800 fail_interval=900
+auth requisite pam_succeed_if.so uid >= 500 quiet
+auth required pam_deny.so
+auth optional pam_gnome_keyring.so
+
+account required pam_faillock.so
+account required pam_unix.so
+account required pam_lastlog.so
+account sufficient pam_localuser.so
+account sufficient pam_succeed_if.so uid < 500 quiet
+account required pam_permit.so
+
+#password required pam_passwdqc.so min=disabled,disabled,16,12,8 random=42
+password required pam_cracklib.so retry=3 minlen=14 dcredit=-1 ucredit=-1 ocredit=-1 lcredit=-1 difok=3 maxrepeat=3
+password sufficient pam_unix.so sha512 shadow try_first_pass use_authtok remember=24
+password required pam_deny.so
+
+session required pam_lastlog.so showfailed
+session optional pam_keyinit.so revoke
+session required pam_limits.so
+session [success=1 default=ignore] pam_succeed_if.so service in crond quiet use_uid
+session required pam_unix.so
+EOF
+
 
 ########################################
 # Make SELinux Configuration Immutable
