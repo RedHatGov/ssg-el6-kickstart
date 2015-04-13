@@ -131,6 +131,10 @@ cat <<EOF > /etc/init/control-alt-delete.conf
 exec /usr/bin/logger -p security.info "Control-Alt-Delete pressed"
 EOF
 
+cat <<EOF > /etc/init/control-alt-delete.override
+exec /usr/bin/logger -p security.info "Control-Alt-Delete pressed"
+EOF
+
 ########################################
 # Disable Interactive Shell (Timeout)
 ########################################
