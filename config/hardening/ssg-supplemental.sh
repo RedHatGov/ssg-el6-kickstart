@@ -178,6 +178,19 @@ sed -i 's/^#\s*\(%wheel\s*ALL=(ALL)\s*ALL\)/\1/' /etc/sudoers
 echo -e "\n## Set timeout for authentiation (5 Minutes)\nDefaults:ALL timestamp_timeout=5\n" >> /etc/sudoers
 
 ########################################
+# Set Removeable Media to noexec
+#   CCE-27196-5
+########################################
+for DEVICE in $(/bin/lsblk | grep sr | awk '{ print $1 }'); do
+	mkdir -p /media/$DEVICE
+	echo -e "/dev/$DEVICE\t\t/media/$DEVICE\t\tiso9660\tdefaults,ro,noexec\t0 0" >> /etc/fstab
+done
+for DEVICE in $(cd /dev;ls *cd* *dvd*); do
+	mkdir -p /media/$DEVICE
+	echo -e "/dev/$DEVICE\t\t/media/$DEVICE\t\tiso9660\tdefaults,ro,noexec\t0 0" >> /etc/fstab
+done
+
+########################################
 # SSHD Hardening
 ########################################
 echo "MACs hmac-sha2-512,hmac-sha2-256,hmac-sha1" >> /etc/ssh/sshd_config
