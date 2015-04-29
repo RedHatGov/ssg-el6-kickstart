@@ -183,11 +183,11 @@ echo -e "\n## Set timeout for authentiation (5 Minutes)\nDefaults:ALL timestamp_
 ########################################
 for DEVICE in $(/bin/lsblk | grep sr | awk '{ print $1 }'); do
 	mkdir -p /media/$DEVICE
-	echo -e "/dev/$DEVICE\t\t/media/$DEVICE\t\tiso9660\tdefaults,ro,noexec\t0 0" >> /etc/fstab
+	echo -e "/dev/$DEVICE\t\t/media/$DEVICE\t\tiso9660\tdefaults,ro,noexec,noauto\t0 0" >> /etc/fstab
 done
 for DEVICE in $(cd /dev;ls *cd* *dvd*); do
 	mkdir -p /media/$DEVICE
-	echo -e "/dev/$DEVICE\t\t/media/$DEVICE\t\tiso9660\tdefaults,ro,noexec\t0 0" >> /etc/fstab
+	echo -e "/dev/$DEVICE\t\t/media/$DEVICE\t\tiso9660\tdefaults,ro,noexec,noauto\t0 0" >> /etc/fstab
 done
 
 ########################################
