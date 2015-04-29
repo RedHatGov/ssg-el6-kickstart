@@ -18,6 +18,7 @@ fi
 echo -e "\033[3m\033[1mRHEV Post-Install Script\033[0m\033[0m"
 
 # Disallow Root Login
+gpasswd -d root sshusers
 sed -i "/^PermitRootLogin/ c\PermitRootLogin no" /etc/ssh/sshd_config
 
 # Restart SSHD Service
