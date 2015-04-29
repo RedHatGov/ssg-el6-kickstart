@@ -31,6 +31,7 @@ done
 # Permit Root Login
 usermod -a -G sshusers root
 sed -i "/^PermitRootLogin/ c\PermitRootLogin yes" /etc/ssh/sshd_config
+sed -e "/pam_succeed_if.so uid/s/^/#/g" -i /etc/pam.d/password-auth
 
 # Restart SSHD Service
 service sshd restart
