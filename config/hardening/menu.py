@@ -901,7 +901,7 @@ class Display_Menu:
 			# Run Hardening Script
 			f.write('/usr/bin/oscap xccdf eval --profile '+str(self.profile)+' --remediate --results /root/`hostname`-ssg-results.xml  --cpe /usr/share/xml/scap/ssg/content/ssg-rhel6-cpe-dictionary.xml /usr/share/xml/scap/ssg/content/ssg-rhel6-xccdf.xml\n')
 			# RHEV Scripts for Pre-Install/Post-Install
-			f.write('cp /root/hardening/rhevm*.sh /root/')
+			f.write('cp /root/hardening/rhevm*.sh /root/\n')
 			f.close()
 			# Package Selection
 			f = open('/tmp/hardening-packages','w')
