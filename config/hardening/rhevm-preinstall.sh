@@ -29,6 +29,7 @@ esac
 done
 
 # Permit Root Login
+usermod -a -G sshusers root
 sed -i "/^PermitRootLogin/ c\PermitRootLogin yes" /etc/ssh/sshd_config
 
 # Restart SSHD Service
