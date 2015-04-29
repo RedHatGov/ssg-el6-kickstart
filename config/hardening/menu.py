@@ -2,7 +2,7 @@
 # Graphical Kickstart Script
 #
 # This script was written by Frank Caviggia, Red Hat Consulting
-# Last update was 30 March 2015
+# Last update was 29 April 2015
 # This script is NOT SUPPORTED by Red Hat Global Support Services.
 # Please contact Rick Tavares for more information.
 #
@@ -1074,16 +1074,6 @@ class Display_Menu:
 			f.close()
 
 
-		################################################################################################################
-		# FIPS 140-2 Configuration
-		################################################################################################################
-		if self.fips_kernel.get_active() == True:			
-			f = open('/tmp/hardening-post','a')
-			# Enable FIPS 140-2 mode in Kernel
-			f.write('/root/hardening/fips-kernel-mode.sh\n')
-			f.close()
-
-
 	# Check LVM Partitioning
 	def lvm_check(self,args):
 		self.lvm = self.root_partition.get_value_as_int()+self.home_partition.get_value_as_int()+self.tmp_partition.get_value_as_int()+self.var_partition.get_value_as_int()+self.log_partition.get_value_as_int()+self.audit_partition.get_value_as_int()+self.swap_partition.get_value_as_int()+self.www_partition.get_value_as_int()+self.opt_partition.get_value_as_int()
@@ -1134,6 +1124,13 @@ class Display_Menu:
 
         # Appply Configurations to Kickstart File
         def apply_configuration(self,args):
+
+		# FIPS 140-2 Configuration
+		if self.fips_kernel.get_active() == True:			
+			f = open('/tmp/hardening-post','a')
+			# Enable FIPS 140-2 mode in Kernel
+			f.write('\n/root/hardening/fips-kernel-mode.sh\n')
+			f.close()
 
 		# Set system password
 		while True:
