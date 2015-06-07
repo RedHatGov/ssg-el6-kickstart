@@ -491,6 +491,9 @@ class Display_Menu:
 			f = open('/tmp/hardening-post','w')
 			# Run Hardening Script
 			f.write('/usr/bin/oscap xccdf eval --profile '+str(self.profile)+' --remediate --results /root/`hostname`-ssg-results.xml  --cpe /usr/share/xml/scap/ssg/content/ssg-rhel6-cpe-dictionary.xml /usr/share/xml/scap/ssg/content/ssg-rhel6-xccdf.xml\n')
+			# Firewall Configuration
+			f.write('cp /root/hardening/iptables.sh /root/\n')
+			f.write('/root/iptables.sh\n')
 			f.close()
 			# Package Selection
 			f = open('/tmp/hardening-packages','w')
@@ -522,6 +525,9 @@ class Display_Menu:
 			f = open('/tmp/hardening-post','w')
 			# Run Hardening Script
 			f.write('/usr/bin/oscap xccdf eval --profile '+str(self.profile)+' --remediate --results /root/`hostname`-ssg-results.xml  --cpe /usr/share/xml/scap/ssg/content/ssg-rhel6-cpe-dictionary.xml /usr/share/xml/scap/ssg/content/ssg-rhel6-xccdf.xml\n')
+			# Firewall Configuration
+			f.write('cp /root/hardening/iptables.sh /root/\n')
+			f.write('/root/iptables.sh\n')
 			f.close()
 			# Package Selection
 			f = open('/tmp/hardening-packages','w')
@@ -617,6 +623,9 @@ class Display_Menu:
 			f = open('/tmp/hardening-post','w')
 			# Run Hardening Script
 			f.write('/usr/bin/oscap xccdf eval --profile '+str(self.profile)+' --remediate --results /root/`hostname`-ssg-results.xml  --cpe /usr/share/xml/scap/ssg/content/ssg-rhel6-cpe-dictionary.xml /usr/share/xml/scap/ssg/content/ssg-rhel6-xccdf.xml\n')
+			# Firewall Configuration
+			f.write('cp /root/hardening/iptables.sh /root/\n')
+			f.write('/root/iptables.sh\n')
 			f.close()
 			# Package Selection
 			f = open('/tmp/hardening-packages','w')
@@ -741,6 +750,9 @@ class Display_Menu:
 			f = open('/tmp/hardening-post','w')
 			# Run Hardening Script
 			f.write('/usr/bin/oscap xccdf eval --profile '+str(self.profile)+' --remediate --results /root/`hostname`-ssg-results.xml  --cpe /usr/share/xml/scap/ssg/content/ssg-rhel6-cpe-dictionary.xml /usr/share/xml/scap/ssg/content/ssg-rhel6-xccdf.xml\n')
+			# Firewall Configuration
+			f.write('cp /root/hardening/iptables.sh /root/\n')
+			f.write('/root/iptables.sh --idm\n')
 			f.close()
 			# Package Selection
 			f = open('/tmp/hardening-packages','w')
@@ -779,6 +791,9 @@ class Display_Menu:
 			f.write('/usr/bin/oscap xccdf eval --profile '+str(self.profile)+' --remediate --results /root/`hostname`-ssg-results.xml  --cpe /usr/share/xml/scap/ssg/content/ssg-rhel6-cpe-dictionary.xml /usr/share/xml/scap/ssg/content/ssg-rhel6-xccdf.xml\n')
 			# RHN Satellite requires umask of 022 for installation only for root
 			f.write('cat "umask 022" >> /root/.bashrc\n')
+			# Firewall Configuration
+			f.write('cp /root/hardening/iptables.sh /root/\n')
+			f.write('/root/iptables.sh --https\n')
 			f.close()
 			# Package Selection
 			f = open('/tmp/hardening-packages','w')
@@ -812,6 +827,9 @@ class Display_Menu:
 			f.write('/usr/bin/oscap xccdf eval --profile '+str(self.profile)+' --remediate --results /root/`hostname`-ssg-results.xml  --cpe /usr/share/xml/scap/ssg/content/ssg-rhel6-cpe-dictionary.xml /usr/share/xml/scap/ssg/content/ssg-rhel6-xccdf.xml\n')
 			# RHN Satellite requires umask of 022 for installation only for root
 			f.write('cat "umask 022" >> /root/.bashrc\n')
+			# Firewall Configuration
+			f.write('cp /root/hardening/iptables.sh /root/\n')
+			f.write('/root/iptables.sh\n')
 			f.close()
 			# Package Selection
 			f = open('/tmp/hardening-packages','w')
@@ -844,6 +862,9 @@ class Display_Menu:
 			f = open('/tmp/hardening-post','w')
 			# Run Hardening Script
 			f.write('/usr/bin/oscap xccdf eval --profile '+str(self.profile)+' --remediate --results /root/`hostname`-ssg-results.xml  --cpe /usr/share/xml/scap/ssg/content/ssg-rhel6-cpe-dictionary.xml /usr/share/xml/scap/ssg/content/ssg-rhel6-xccdf.xml\n')
+			# Firewall Configuration
+			f.write('cp /root/hardening/iptables.sh /root/\n')
+			f.write('/root/iptables.sh\n')
 			f.close()
 			# Package Selection
 			f = open('/tmp/hardening-packages','w')
@@ -902,6 +923,9 @@ class Display_Menu:
 			f.write('/usr/bin/oscap xccdf eval --profile '+str(self.profile)+' --remediate --results /root/`hostname`-ssg-results.xml  --cpe /usr/share/xml/scap/ssg/content/ssg-rhel6-cpe-dictionary.xml /usr/share/xml/scap/ssg/content/ssg-rhel6-xccdf.xml\n')
 			# RHEV Scripts for Pre-Install/Post-Install
 			f.write('cp /root/hardening/rhevm*.sh /root/\n')
+			# Firewall Configuration
+			f.write('cp /root/hardening/iptables.sh /root/\n')
+			f.write('/root/iptables.sh --kvm\n')
 			f.close()
 			# Package Selection
 			f = open('/tmp/hardening-packages','w')
@@ -933,6 +957,9 @@ class Display_Menu:
 			f = open('/tmp/hardening-post','w')
 			# Run Hardening Script
 			f.write('/usr/bin/oscap xccdf eval --profile '+str(self.profile)+' --remediate --results /root/`hostname`-ssg-results.xml  --cpe /usr/share/xml/scap/ssg/content/ssg-rhel6-cpe-dictionary.xml /usr/share/xml/scap/ssg/content/ssg-rhel6-xccdf.xml\n')
+			# Firewall Configuration
+			f.write('cp /root/hardening/iptables.sh /root/\n')
+			f.write('/root/iptables.sh --kvm\n')
 			f.close()
 			# Package Selection
 			f = open('/tmp/hardening-packages','w')
@@ -951,7 +978,7 @@ class Display_Menu:
 
 
 		################################################################################################################
-		# Apache HTTP (Web Server)
+		# Apache HTTPD (Web Server)
 		################################################################################################################
 		if int(self.system_profile.get_active()) == 9:
 			# Partitioning
@@ -974,6 +1001,9 @@ class Display_Menu:
 			f = open('/tmp/hardening-post','w')
 			# Run Hardening Script
 			f.write('/usr/bin/oscap xccdf eval --profile '+str(self.profile)+' --remediate --results /root/`hostname`-ssg-results.xml  --cpe /usr/share/xml/scap/ssg/content/ssg-rhel6-cpe-dictionary.xml /usr/share/xml/scap/ssg/content/ssg-rhel6-xccdf.xml\n')
+			# Firewall Configuration
+			f.write('cp /root/hardening/iptables.sh /root/\n')
+			f.write('/root/iptables.sh --https\n')
 			f.close()
 			# Package Selection
 			f = open('/tmp/hardening-packages','w')
@@ -982,7 +1012,7 @@ class Display_Menu:
 
 
 		################################################################################################################
-		# Apache Tomcat
+		# Apache HTTPD/Tomcat
 		################################################################################################################
 		if int(self.system_profile.get_active()) == 10:
 			# Partitioning
@@ -1009,6 +1039,7 @@ class Display_Menu:
 			# Package Selection
 			f = open('/tmp/hardening-packages','w')
 			f.write('tomcat6\n')
+			f.write('httpd\n')
 			f.close()
 
 
@@ -1036,6 +1067,9 @@ class Display_Menu:
 			f = open('/tmp/hardening-post','w')
 			# Run Hardening Script
 			f.write('/usr/bin/oscap xccdf eval --profile '+str(self.profile)+' --remediate --results /root/`hostname`-ssg-results.xml  --cpe /usr/share/xml/scap/ssg/content/ssg-rhel6-cpe-dictionary.xml /usr/share/xml/scap/ssg/content/ssg-rhel6-xccdf.xml\n')
+			# Firewall Configuration
+			f.write('cp /root/hardening/iptables.sh /root/\n')
+			f.write('/root/iptables.sh --postgresql\n')
 			f.close()
 			# Package Selection
 			f = open('/tmp/hardening-packages','w')
@@ -1067,6 +1101,9 @@ class Display_Menu:
 			f = open('/tmp/hardening-post','w')
 			# Run Hardening Script
 			f.write('/usr/bin/oscap xccdf eval --profile '+str(self.profile)+' --remediate --results /root/`hostname`-ssg-results.xml  --cpe /usr/share/xml/scap/ssg/content/ssg-rhel6-cpe-dictionary.xml /usr/share/xml/scap/ssg/content/ssg-rhel6-xccdf.xml\n')
+			# Firewall Configuration
+			f.write('cp /root/hardening/iptables.sh /root/\n')
+			f.write('/root/iptables.sh --mysql\n')
 			f.close()
 			# Package Selection
 			f = open('/tmp/hardening-packages','w')
