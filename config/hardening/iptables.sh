@@ -271,6 +271,4 @@ cat <<EOF >> /etc/sysconfig/iptables
 COMMIT
 EOF
 
-/etc/init.d/sshd restart &> /dev/null
-
 exit 0
