@@ -20,7 +20,7 @@ usage: $0 [options]
   --http	Allows HTTP (80/tcp)
   --https	Allows HTTPS (443/tcp)
   --dns		Allows DNS (53/tcp/udp)
-  -! -vtp		Allows NTP (123/tcp/udp)
+  --ntp		Allows NTP (123/tcp/udp)
   --dhcp	Allows DHCP (67,68/tcp/udp)
   --tftp	Allows TFTP (69/tcp/udp)
   --rsyslog	Allows RSYSLOG (514/tcp/udp)
@@ -88,10 +88,10 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 # Check if iptables package is installed
-#if [ ! -e /usr/sbin/iptables ]; then
-#	echo "ERROR: The iptables package is not installed."
-#	exit 1
-#fi
+if [ ! -e /usr/sbin/iptables ]; then
+	echo "ERROR: The iptables package is not installed."
+	exit 1
+fi
 
 # Backup originial configuration
 if [ ! -e /etc/sysconfig/iptables.orig ]; then
@@ -117,7 +117,7 @@ cat <<EOF > /etc/sysconfig/iptables
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 22 -j ACCEPT
 EOF
 
-if [ ! -v $DNS ]; then
+if [ ! -z $DNS ]; then
 cat <<EOF >> /etc/sysconfig/iptables
 #### DNS Services (ISC BIND/IdM/IPA)
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 53 -j ACCEPT
@@ -125,7 +125,7 @@ cat <<EOF >> /etc/sysconfig/iptables
 EOF
 fi
 
-if [ ! -v $DHCP ]; then
+if [ ! -z $DHCP ]; then
 cat <<EOF >> /etc/sysconfig/iptables
 #### DHCP Server
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 67 -j ACCEPT
@@ -135,7 +135,7 @@ cat <<EOF >> /etc/sysconfig/iptables
 EOF
 fi
 
-if [ ! -v $TFTP ]; then
+if [ ! -z $TFTP ]; then
 cat <<EOF >> /etc/sysconfig/iptables
 #### TFTP Server
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 69 -j ACCEPT
@@ -143,7 +143,7 @@ cat <<EOF >> /etc/sysconfig/iptables
 EOF
 fi
 
-if [ ! -v $HTTP ]; then
+if [ ! -z $HTTP ]; then
 cat <<EOF >> /etc/sysconfig/iptables
 #### HTTPD - Recommend forwarding traffic to HTTPS 443
 ####   Recommended Article: http://www.cyberciti.biz/tips/howto-apache-force-https-secure-connections.html
@@ -151,7 +151,7 @@ cat <<EOF >> /etc/sysconfig/iptables
 EOF
 fi
 
-if [ ! -v $KERBEROS ]; then
+if [ ! -z $KERBEROS ]; then
 cat <<EOF >> /etc/sysconfig/iptables
 #### Kerberos Authentication (IdM/IPA)
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 88 -j ACCEPT
@@ -162,7 +162,7 @@ cat <<EOF >> /etc/sysconfig/iptables
 EOF
 fi
 
-if [ ! -v $NTP ]; then
+if [ ! -z $NTP ]; then
 cat <<EOF >> /etc/sysconfig/iptables
 #### NTP Server
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 123 -j ACCEPT
@@ -170,7 +170,7 @@ cat <<EOF >> /etc/sysconfig/iptables
 EOF
 fi
 
-if [ ! -v $LDAP ]; then
+if [ ! -z $LDAP ]; then
 cat <<EOF >> /etc/sysconfig/iptables
 #### LDAP (IdM/IPA)
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 389 -j ACCEPT
@@ -178,14 +178,14 @@ cat <<EOF >> /etc/sysconfig/iptables
 EOF
 fi
 
-if [ ! -v $HTTPS ]; then
+if [ ! -z $HTTPS ]; then
 cat <<EOF >> /etc/sysconfig/iptables
 #### HTTPS
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 443 -j ACCEPT
 EOF
 fi
 
-if [ ! -v $RSYSLOG ]; then
+if [ ! -z $RSYSLOG ]; then
 cat <<EOF >> /etc/sysconfig/iptables
 #### RSYSLOG Server
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 514 -j ACCEPT
@@ -193,7 +193,7 @@ cat <<EOF >> /etc/sysconfig/iptables
 EOF
 fi
 
-if [ ! -v $LDAPS ]; then
+if [ ! -z $LDAPS ]; then
 cat <<EOF >> /etc/sysconfig/iptables
 #### LDAPS - LDAP via SSL (IdM/IPA)
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 636 -j ACCEPT
@@ -201,35 +201,35 @@ cat <<EOF >> /etc/sysconfig/iptables
 EOF
 fi
 
-if [ ! -v $NFSV4 ]; then
+if [ ! -z $NFSV4 ]; then
 cat <<EOF >> /etc/sysconfig/iptables
 #### NFSv4 Server
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 2049 -j ACCEPT
 EOF
 fi
 
-if [ ! -v $ISCSI ]; then
+if [ ! -z $ISCSI ]; then
 cat <<EOF >> /etc/sysconfig/iptables
 #### iSCSI Server
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 3260 -j ACCEPT
 EOF
 fi
 
-if [ ! -v $POSTGRESQL ]; then
+if [ ! -z $POSTGRESQL ]; then
 cat <<EOF >> /etc/sysconfig/iptables
 #### PostgreSQL Server
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 5432 -j ACCEPT
 EOF
 fi
 
-if [ ! -v $MARIADB ]; then
+if [ ! -z $MARIADB ]; then
 cat <<EOF >> /etc/sysconfig/iptables
 #### MariaDB/MySQL Server
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 3306 -j ACCEPT
 EOF
 fi
 
-if [ ! -v $SAMBA ]; then
+if [ ! -z $SAMBA ]; then
 cat <<EOF >> /etc/sysconfig/iptables
 #### Samba/CIFS Server
 -A INPUT -m udp -p udp --dport 137 -j ACCEPT
@@ -239,7 +239,7 @@ cat <<EOF >> /etc/sysconfig/iptables
 EOF
 fi
 
-if [ ! -v $KVM ]; then
+if [ ! -z $KVM ]; then
 cat <<EOF >> /etc/sysconfig/iptables
 #### SPICE/VNC Client (KVM)
 -A INPUT -m state --state NEW -m tcp -p tcp --match multiport --dports 5634:6166 -j ACCEPT
@@ -251,7 +251,7 @@ cat <<EOF >> /etc/sysconfig/iptables
 EOF
 fi
 
-if [ ! -v $RHEV ]; then
+if [ ! -z $RHEV ]; then
 cat <<EOF >> /etc/sysconfig/iptables
 #### RHEVM (ActiveX Client)
 -A INPUT -m state --state NEW -m tcp -p tcp --match multiport --dports 8006:8009 -j ACCEPT
@@ -273,5 +273,4 @@ EOF
 
 /etc/init.d/sshd restart &> /dev/null
 
-exit 0	
-
+exit 0
