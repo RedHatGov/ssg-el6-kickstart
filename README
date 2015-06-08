@@ -79,7 +79,20 @@ createiso.sh - installation script to modify RHEL 6.4+ ISO image
 			Scripts to losen settings temporararily to allow registration
 			of the system with RHEV-M by allowing root login and allowing
 			exec in /tmp. Run rhevm-postinstall.sh after system is added
-			into RHEV-M
+			into RHEV-M. Copied to /root after kickstart install
+
+		iptables.sh
+
+			Configures firewall during kicckstart installation. Called in
+			menu.py script. Firewall is configured to reccomended ports
+			for each product or profile. Copied to /root after kickstart
+			install
+
+		ipa-pam-configuration.sh
+
+			Configures system for using IPA/IdM authentication by
+			overwriting the pam.d configurations. Copied to /root
+			after kickstart installation
 
 HARDENING INFORMATION
 =====================
