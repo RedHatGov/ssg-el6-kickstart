@@ -1,6 +1,6 @@
 #!/bin/sh
 # This script was written by Frank Caviggia, Red Hat Consulting
-# Last update was 2 June 2015
+# Last update was 8 June 2015
 # This script is NOT SUPPORTED by Red Hat Global Support Services.
 # Please contact Rick Tavares for more information.
 #
@@ -10,6 +10,18 @@
 # Copyright: Red Hat Consulting, March 2015
 # Author: Frank Caviggia <fcaviggi (at) redhat.com>
 
+# Backup originial configuration
+if [ ! -e /etc/pam.d/system-auth-local.orig ]; then
+  cp /etc/pam.d/system-auth-local /etc/pam.d/system-auth-local.orig
+fi
+if [ ! -e /etc/pam.d/password-auth-local.orig ]; then
+  cp /etc/pam.d/password-auth-local /etc/pam.d/password-auth-local.orig
+fi
+if [ ! -e /etc/pam.d/gnome-screensaver.orig ]; then
+  cp /etc/pam.d/gnome-screensaver /etc/pam.d/gnome-screensaver.orig
+fi
+
+# Deploy Configuruation
 cat <<EOF > /etc/pam.d/system-auth-local
 #%PAM-1.0
 auth required pam_env.so
