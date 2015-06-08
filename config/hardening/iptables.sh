@@ -88,7 +88,7 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 # Check if iptables package is installed
-if [ ! -e /usr/sbin/iptables ]; then
+if [ ! -e $(which iptables) ]; then
 	echo "ERROR: The iptables package is not installed."
 	exit 1
 fi
