@@ -772,6 +772,8 @@ class Display_Menu:
 		# RHN Satellite 5.7 Install
 		################################################################################################################
 		if int(self.system_profile.get_active()) == 4:
+			# Turn off FIPS 140-2 mode for Kernel
+			self.fips_kernel.set_active(False)
 			# Partitioning
 			if self.disk_total < 120:
 				self.MessageBox(self.window,"<b>Recommended minimum of 120Gb disk space for a RHN Satelite Server!</b>\n\n You have "+str(self.disk_total)+"Gb available.",gtk.MESSAGE_WARNING)
@@ -808,6 +810,8 @@ class Display_Menu:
 		# RHN Satellite 6.x Install
 		################################################################################################################
 		if int(self.system_profile.get_active()) == 5:
+			# Turn off FIPS 140-2 mode for Kernel
+			self.fips_kernel.set_active(False)
 			# Partitioning
 			if self.disk_total < 120:
 				self.MessageBox(self.window,"<b>Recommended minimum of 120Gb disk space for a RHN Satelite Server!</b>\n\n You have "+str(self.disk_total)+"Gb available.",gtk.MESSAGE_WARNING)
