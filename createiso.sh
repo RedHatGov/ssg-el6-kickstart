@@ -3,13 +3,13 @@
 # HARDENED RHEL DVD CREATOR
 #
 # This script was written by Frank Caviggia, Red Hat Consulting
-# Last update was 20 March 2015
+# Last update was 21 July 2015
 # This script is NOT SUPPORTED by Red Hat Global Support Services.
 # Please contact Josh Waldman for more information.
 #
 # Author: Frank Caviggia (fcaviggi@redhat.com)
 # Copyright: Red Hat, (c) 2014
-# Version: 1.2
+# Version: 1.2.5
 # License: GPLv2
 # Description: Kickstart Installation of RHEL 6 with DISA STIG 
 ###############################################################################
@@ -77,19 +77,30 @@ if [[ $? -eq 0 ]]; then
 	mkdir $DIR/rhel-dvd
 	mount -o loop $1 /rhel
 	echo "Done."
-	# Tests DVD for RHEL 6.4+
-	if [[ $(grep "Red Hat" /rhel/.discinfo | awk '{ print $5 }' | awk -F '.' '{ print $1 }') -ne 6 ]]; then
-		echo "ERROR: Image is not RHEL 6.4+"
-		umount /rhel
-		rm -rf /rhel
+	
+	# Determine RHEL Version
+	if [ -e /rhel/.discinfo ]; then
+		RHEL_VERSION=$(grep "Red Hat" /rhel/.discinfo | awk '{ print $5 }')
+		MAJOR=$(echo $RHEL_VERSION | awk -F '.' '{ print $1 }')
+		MINOR=$(echo $RHEL_VERSION | awk -F '.' '{ print $2 }')
+		if [[ $MAJOR -ne 6 ]]; then
+			echo "ERROR: Image is not RHEL 6.4+"
+			umount /rhel
+			rm -rf /rhel
+			exit 1
+		fi
+		if [[ $MINOR -lt 4 ]]; then
+			echo "ERROR: Image is not RHEL 6.4+"
+			umount /rhel
+			rm -rf /rhel
+			exit 1
+		fi
+	else
+		echo "ERROR: Image is not RHEL"
 		exit 1
 	fi
-	if [[ $(grep "Red Hat" /rhel/.discinfo | awk '{ print $5 }' | awk -F '.' '{ print $2 }') -lt 4 ]]; then
-		echo "ERROR: Image is not RHEL 6.4+"
-		umount /rhel
-		rm -rf /rhel
-		exit 1
-	fi
+
+
 	echo -n "Copying RHEL DVD Image..."
 	cp -a /rhel/* $DIR/rhel-dvd/
 	cp -a /rhel/.discinfo $DIR/rhel-dvd/
@@ -101,28 +112,26 @@ else
 	exit 1
 fi
 
+# Set RHEL Version in ISO Linux
+sed -i "s/6.X/$RHEL_VERSION/g" config/isolinux/isolinux.cfg
+
 echo -n "Modifying RHEL DVD Image..."
 cp -a $DIR/config/* $DIR/rhel-dvd/
-# RHEL 6.7 included the SCAP Security Guide (SSG) RPM
-if [[ $(grep "Red Hat" $DIR/rhel-dvd/.discinfo | awk '{ print $5 }' | awk -F '.' '{ print $2 }') -ge 7 ]]; then
-	rm -f $DIR/rhel-dvd/hardening/scap-security-guide*rpm
-	sed -i "s/xml-common/scap-security-guide\nxml-common/" $DIR/rhel-dvd/hardening/hardened-rhel.cfg
-fi
 echo " Done."
 
 echo "Remastering RHEL DVD Image..."
 cd $DIR/rhel-dvd
 chmod u+w isolinux/isolinux.bin
 find . -name TRANS.TBL -exec rm '{}' \; 
-/usr/bin/mkisofs -J -T -o $DIR/ssg-rhel.iso -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -R -m TRANS.TBL .
+/usr/bin/mkisofs -J -T -o $DIR/ssg-rhel-$RHEL_VERSION.iso -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -R -m TRANS.TBL .
 cd $DIR
 rm -rf $DIR/rhel-dvd
 echo "Done."
 
 echo "Signing RHEL DVD Image..."
-/usr/bin/implantisomd5 $DIR/ssg-rhel.iso
+/usr/bin/implantisomd5 $DIR/ssg-rhel-$RHEL_VERSION.iso
 echo "Done."
 
-echo "DVD Created. [ssg-rhel.iso]"
+echo "DVD Created. [ssg-rhel-$RHEL_VERSION.iso]"
 
 exit 0
