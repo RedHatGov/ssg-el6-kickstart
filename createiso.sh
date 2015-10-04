@@ -112,11 +112,10 @@ else
 	exit 1
 fi
 
-# Set RHEL Version in ISO Linux
-sed -i "s/6.X/$RHEL_VERSION/g" config/isolinux/isolinux.cfg
-
 echo -n "Modifying RHEL DVD Image..."
+sed -i "s/6.X/$RHEL_VERSION/g" $DIR/config/isolinux/isolinux.cfg
 cp -a $DIR/config/* $DIR/rhel-dvd/
+sed -i "s/$RHEL_VERSION/6.X/g" $DIR/config/isolinux/isolinux.cfg
 echo " Done."
 
 echo "Remastering RHEL DVD Image..."
