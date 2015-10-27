@@ -365,10 +365,11 @@ gconftool-2 --direct \
 --type bool \
 --set /desktop/gnome/thumbnailers/disable_all true
 # NIST 800-53 CCE-3315-9 (row 95): Screensaver in 15 Minutes; Forced Logout in 30 Minutes
+## Change to forced-logout to kill X-session after a specificed length of time
 gconftool-2 --direct \
 --config-source xml:readwrite:/etc/gconf/gconf.xml.mandatory \
 --type string \
---set /desktop/gnome/session/max_idle_action "forced-logout"
+--set /desktop/gnome/session/max_idle_action "none"
 gconftool-2 --direct \
 --config-source xml:readwrite:/etc/gconf/gconf.xml.mandatory \
 --type int \
@@ -377,6 +378,10 @@ gconftool-2 --direct \
 --config-source xml:readwrite:/etc/gconf/gconf.xml.mandatory \
 --type int \
 --set /apps/gnome-screensaver/idle_delay 15
+gconftool-2 --direct \
+--config-source xml:readwrite:/etc/gconf/gconf.xml.mandatory \
+--type int \
+--set /desktop/gnome/session/idle_delay 15
 # NIST 800-53 CCE-14604-3 (row 96)
 gconftool-2 --direct \
 --config-source xml:readwrite:/etc/gconf/gconf.xml.mandatory \
