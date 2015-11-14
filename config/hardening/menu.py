@@ -548,7 +548,6 @@ class Display_Menu:
 			f.close()
 			# Package Selection
 			f = open('/tmp/hardening-packages','w')
-			f.write('@additional-devel\n')
 			f.write('@basic-desktop\n')
 			f.write('@desktop-platform\n')
 			f.write('@directory-client\n')
@@ -556,8 +555,6 @@ class Display_Menu:
 			f.write('@graphical-admin-tools\n')
 			f.write('@input-methods\n')
 			f.write('@internet-browser\n')
-			f.write('@java-platform\n')
-			f.write('@legacy-x\n')
 			f.write('@x11\n')
 			f.write('pcsc*\n')
 			f.write('coolkey\n')
