@@ -500,9 +500,3 @@ chown root:root /etc/cron.weekly/aide-report
 chmod 555 /etc/cron.weekly/aide-report
 mkdir -p /var/log/aide/reports
 chmod 700 /var/log/aide/reports
-
-########################################
-# Disable SystemD Date Service 
-# Use (chrony or ntpd)
-########################################
-timedatectl set-ntp false
