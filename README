@@ -46,7 +46,7 @@ createiso.sh - installation script to modify RHEL 6.4+ ISO image
 
 		isolinux.cfg - Menu Configuration for Kickstart
 
-	stig-fix/
+	hardening/
 
 		ssg-rhel.cfg
 		
