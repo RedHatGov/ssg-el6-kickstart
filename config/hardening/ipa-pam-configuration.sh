@@ -1,6 +1,6 @@
 #!/bin/sh
 # This script was written by Frank Caviggia, Red Hat Consulting
-# Last update was 8 June 2015
+# Last update was 3 February 2016
 # This script is NOT SUPPORTED by Red Hat Global Support Services.
 # Please contact Rick Tavares for more information.
 #
@@ -28,7 +28,7 @@ auth required pam_env.so
 auth required pam_lastlog.so inactive=35
 auth required pam_faillock.so preauth silent audit deny=3 even_deny_root root_unlock_time=900 unlock_time=604800 fail_interval=900
 auth sufficient pam_unix.so try_first_pass
-auth sufficient pam_sss.so try_first_pass
+auth sufficient pam_sss.so use_first_pass
 auth [default=die] pam_faillock.so authfail audit deny=3 even_deny_root root_unlock_time=900 unlock_time=604800 fail_interval=900
 auth sufficient pam_faillock.so authsucc audit deny=3 even_deny_root root_unlock_time=900 unlock_time=604800 fail_interval=900
 auth requisite pam_succeed_if.so uid >= 500 quiet
@@ -65,7 +65,7 @@ auth required pam_env.so
 auth required pam_lastlog.so inactive=35
 auth required pam_faillock.so preauth silent audit deny=3 even_deny_root root_unlock_time=900 unlock_time=604800 fail_interval=900
 auth sufficient pam_unix.so try_first_pass
-auth sufficient pam_sss.so try_first_pass
+auth sufficient pam_sss.so use_first_pass
 auth [default=die] pam_faillock.so authfail audit deny=3 even_deny_root root_unlock_time=900 unlock_time=604800 fail_interval=900
 auth sufficient pam_faillock.so authsucc audit deny=3 even_deny_root root_unlock_time=900 unlock_time=604800 fail_interval=900
 auth requisite pam_succeed_if.so uid >= 500 quiet
@@ -102,7 +102,7 @@ auth required pam_env.so
 auth required pam_lastlog.so
 auth required pam_faillock.so preauth silent audit deny=3 even_deny_root root_unlock_time=900 unlock_time=604800 fail_interval=900
 auth sufficient pam_unix.so try_first_pass
-auth sufficient pam_sss.so try_first_pass
+auth sufficient pam_sss.so use_first_pass
 auth [default=die] pam_faillock.so authfail audit deny=3 even_deny_root root_unlock_time=900 unlock_time=604800 fail_interval=900
 auth sufficient pam_faillock.so authsucc audit deny=3 even_deny_root root_unlock_time=900 unlock_time=604800 fail_interval=900
 auth requisite pam_succeed_if.so uid >= 500 quiet
