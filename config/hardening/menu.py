@@ -1433,6 +1433,8 @@ class Display_Menu:
 			else:
 				f.write('part pv.01 --grow --size=200\n')
 			f.write('part /boot --fstype=ext4 --size=1024\n')
+			if os.path.isfile('/sys/firmware/efi'):
+				f.write('part /boot/efi --fstype=efi --size=200\n')
 			f.write('volgroup vg1 --pesize=4096 pv.01\n')
 			f.write('logvol / --fstype=ext4 --name=lv_root --vgname=vg1 --size=2048 --grow --percent='+str(self.root_partition.get_value_as_int())+'\n')
 			f.write('logvol /home --fstype=ext4 --name=lv_home --vgname=vg1 --size=1024 --grow --percent='+str(self.home_partition.get_value_as_int())+'\n')
