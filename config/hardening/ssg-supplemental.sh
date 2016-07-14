@@ -509,3 +509,23 @@ chown root:root /etc/cron.weekly/aide-report
 chmod 555 /etc/cron.weekly/aide-report
 mkdir -p /var/log/aide/reports
 chmod 700 /var/log/aide/reports
+
+########################################
+# C Shell UMASK
+#  CCE-27034-8, DISA FSO RHEL-06-000343
+#  SA-8
+########################################
+echo "umask 0077" >> /etc/csh.cshrc
+
+########################################
+# Set Removable Media to noexec
+#   CCE-27196-5
+########################################
+for DEVICE in $(/bin/lsblk | grep sr | awk '{ print $1 }'); do
+	mkdir -p /mnt/$DEVICE
+	echo -e "/dev/$DEVICE\t\t/mnt/$DEVICE\t\tiso9660\tdefaults,ro,noexec,noauto,nodev,nosuid\t0 0" >> /etc/fstab
+done
+for DEVICE in $(cd /dev;ls *cd* *dvd*); do
+	mkdir -p /mnt/$DEVICE
+	echo -e "/dev/$DEVICE\t\t/mnt/$DEVICE\t\tiso9660\tdefaults,ro,noexec,noauto,nodev,nosuid\t0 0" >> /etc/fstab
+done
