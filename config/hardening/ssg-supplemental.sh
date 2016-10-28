@@ -247,10 +247,6 @@ if [ $(grep " \/usr\/local " ${FSTAB} | grep -c "nodev") -eq 0 ]; then
 	MNT_OPTS=$(grep " \/usr\/local " ${FSTAB} | awk '{print $4}')
 	${SED} -i "s/\( \/usr\/local.*${MNT_OPTS}\)/\1,nodev,nosuid/" ${FSTAB}
 fi
-if [ $(grep " \/dev\/shm " ${FSTAB} | grep -c "nodev") -eq 0 ]; then
-	MNT_OPTS=$(grep " \/dev\/shm " ${FSTAB} | awk '{print $4}')
-	${SED} -i "s/\( \/dev\/shm.*${MNT_OPTS}\)/\1,nodev,noexec,nosuid/" ${FSTAB}
-fi
 if [ $(grep " \/tmp " ${FSTAB} | grep -c "nodev") -eq 0 ]; then
 	MNT_OPTS=$(grep " \/tmp " ${FSTAB} | awk '{print $4}')
 	${SED} -i "s/\( \/tmp.*${MNT_OPTS}\)/\1,nodev,noexec,nosuid/" ${FSTAB}
