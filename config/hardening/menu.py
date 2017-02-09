@@ -904,7 +904,7 @@ class Display_Menu:
 			f.write('autoconf\n')
 			f.write('make\n')
 			f.write('libstdc++\n')
-			f.write('compat-libstdc++\n')
+			f.write('compat-libstdc++-33\n')
 			f.write('libaio\n')
 			f.write('libaio-devel\n')
 			f.write('unixODBC\n')
