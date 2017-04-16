@@ -511,7 +511,7 @@ chmod 700 /var/log/aide/reports
 #  CCE-27034-8, DISA FSO RHEL-06-000343
 #  SA-8
 ########################################
-echo "umask 0077" >> /etc/csh.cshrc
+sed -i 's/umask.*/umask 0077/' /etc/csh.cshrc
 
 ########################################
 # Set Removable Media to noexec
@@ -525,3 +525,31 @@ for DEVICE in $(cd /dev;ls *cd* *dvd*); do
 	mkdir -p /mnt/$DEVICE
 	echo -e "/dev/$DEVICE\t\t/mnt/$DEVICE\t\tiso9660\tdefaults,ro,noexec,noauto,nodev,nosuid\t0 0" >> /etc/fstab
 done
+
+
+# SCAP Complience Report
+cat << EOF >> /root/scap_generate_report.sh
+#!/bin/bash
+########################################
+# Create SSG Complience Report
+########################################
+oscap xccdf eval --profile stig-rhel6-server-upstream --results $(hostname)-scap-report-$(date +%Y%m%d).xml --report $(hostname)-scap-report-$(date +%Y%m%d).html --cpe /usr/share/xml/scap/ssg/content/ssg-rhel6-cpe-dictionary.xml /usr/share/xml/scap/ssg/content/ssg-rhel6-xccdf.xml
+
+exit 0
+
+EOF
+chmod 500 /root/scap_generate_report.sh
+
+# SCAP Redmediation Script
+cat << EOF >> /root/scap_remediate_system.sh
+#!/bin/bash
+########################################
+# SCAP Security Gude Remediation Script
+########################################
+
+oscap xccdf eval --profile stig-rhel6-server-upstream --results $(hostname)-scap-remediation-report-$(date +%Y%m%d).xml --remediate --cpe /usr/share/xml/scap/ssg/content/ssg-rhel6-cpe-dictionary.xml /usr/share/xml/scap/ssg/content/ssg-rhel6-xccdf.xml
+
+exit 0
+
+EOF
+chmod 500 /root/scap_remediate_system.sh  

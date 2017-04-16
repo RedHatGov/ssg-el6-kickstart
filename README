@@ -2,7 +2,7 @@
 # SCAP Security Guide RHEL 6 DVD CREATOR
 #
 # This script was written by Frank Caviggia, Red Hat Consulting
-# Last update was 5 March 2015
+# Last update was 15 April 2017
 # This script is NOT SUPPORTED by Red Hat Global Support Services.
 # Please contact Rick Tavares for more information.
 #
@@ -18,7 +18,7 @@ ABOUT
 
 Modifies a RHEL 6.4+ x86_64 Workstation or Server DVD with a kickstart
 that will install a system that is configured and hardened for
-Red Hat Enterprise Linux 6. 
+Red Hat Enterprise Linux 6. (Latest Update RHEL 6.9)
 
 The kickstart script involves the integration of the following projects 
 into a single installer:

@@ -176,7 +176,7 @@ class Display_Menu:
                 self.security.pack_start(self.label,False,True, 0)
                 self.system_security = gtk.combo_box_new_text()
 		self.system_security.append_text("DISA STIG")
-		self.system_security.append_text("USGCB")
+		#self.system_security.append_text("USGCB")
 		self.system_security.set_active(0)
 		self.system_security.connect('changed',self.configure_system_profile)
                 self.security.pack_start(self.system_security,False,True,0)
@@ -290,6 +290,10 @@ class Display_Menu:
 		self.fips_kernel = gtk.CheckButton('Kernel in FIPS 140-2 Mode')
 		self.fips_kernel.set_active(True)
 		self.encrypt.pack_start(self.fips_kernel, False, True, 0)
+
+                self.nousb_kernel = gtk.CheckButton('Disable USB (nousb)')
+		self.nousb_kernel.set_active(False)
+		self.encrypt.pack_start(self.nousb_kernel, False, True, 0)
 
 		self.vbox.add(self.encrypt)
 
@@ -1338,6 +1342,18 @@ class Display_Menu:
 			f.write('\n/root/hardening/fips-kernel-mode.sh\n')
 			f.close()
 
+		# Disable USB (nousb kernel option)
+		if self.fips_kernel.get_active() == True:
+			f = open('/tmp/hardening-post','a')
+			# Enable nousb mode in Kernel
+			f.write('\ngrubby --update-kernel=ALL --args="nousb"\n')
+			f.close()
+		else:		
+			f = open('/tmp/hardening-post','a')
+			# Disable nousb mode in Kernel
+			f.write('\ngrubby --update-kernel=ALL --remove-args="nousb"\n')
+			f.close()
+
 		# Set system password
 		while True:
 			self.get_password(self.window)
@@ -1432,7 +1448,7 @@ class Display_Menu:
 			else:
 				f.write('part pv.01 --grow --size=200\n')
 			f.write('part /boot --fstype=ext4 --size=1024\n')
-			if os.path.isfile('/sys/firmware/efi'):
+			if os.path.isdir('/sys/firmware/efi'):
 				f.write('part /boot/efi --fstype=efi --size=200\n')
 			f.write('volgroup vg1 --pesize=4096 pv.01\n')
 			f.write('logvol / --fstype=ext4 --name=lv_root --vgname=vg1 --size=2048 --grow --percent='+str(self.root_partition.get_value_as_int())+'\n')
