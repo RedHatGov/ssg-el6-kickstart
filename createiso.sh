@@ -64,6 +64,11 @@ if [ $? -ne 0 ]; then
 	yum install -y genisoimage
 fi
 
+rpm -q syslinux &> /dev/null
+if [ $? -ne 0 ]; then
+	yum install -y syslinux 
+fi
+
 rpm -q isomd5sum &> /dev/null
 if [ $? -ne 0 ]; then
 	yum install -y isomd5sum
@@ -114,20 +119,23 @@ fi
 
 echo -n "Modifying RHEL DVD Image..."
 sed -i "s/6.X/$RHEL_VERSION/g" $DIR/config/isolinux/isolinux.cfg
+sed -i "s/6.X/$RHEL_VERSION/g" $DIR/config/EFI/BOOT/BOOTX64.conf
 cp -a $DIR/config/* $DIR/rhel-dvd/
 sed -i "s/$RHEL_VERSION/6.X/g" $DIR/config/isolinux/isolinux.cfg
+sed -i "s/$RHEL_VERSION/6.X/g" $DIR/config/EFI/BOOT/BOOTX64.conf
 echo " Done."
 
 echo "Remastering RHEL DVD Image..."
 cd $DIR/rhel-dvd
 chmod u+w isolinux/isolinux.bin
 find . -name TRANS.TBL -exec rm '{}' \; 
-/usr/bin/mkisofs -J -T -o $DIR/ssg-rhel-$RHEL_VERSION.iso -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -R -m TRANS.TBL .
+/usr/bin/mkisofs -J -T -o $DIR/ssg-rhel-$RHEL_VERSION.iso -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -eltorito-alt-boot -e images/efiboot.img -no-emul-boot -R -m TRANS.TBL .
 cd $DIR
 rm -rf $DIR/rhel-dvd
 echo "Done."
 
 echo "Signing RHEL DVD Image..."
+/usr/bin/isohybrid --uefi $DIR/ssg-rhel-$RHEL_VERSION.iso &> /dev/null
 /usr/bin/implantisomd5 $DIR/ssg-rhel-$RHEL_VERSION.iso
 echo "Done."
 
