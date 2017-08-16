@@ -78,7 +78,7 @@ ln -sf /etc/pam.d/password-auth-local /etc/pam.d/password-auth
 cp -f /etc/pam.d/password-auth-local /etc/pam.d/password-auth-ac
 
 cat <<EOF > /etc/pam.d/gnome-screensaver
-%PAM-1.0
+#%PAM-1.0
 auth [success=done ignore=ignore default=bad] pam_selinux_permit.so
 auth required pam_env.so
 auth required pam_lastlog.so
