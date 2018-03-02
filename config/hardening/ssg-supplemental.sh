@@ -2,13 +2,12 @@
 # This script was written by Frank Caviggia, Red Hat Consulting
 # Last update was 19 March 2015
 # This script is NOT SUPPORTED by Red Hat Global Support Services.
-# Please contact Rick Tavares for more information.
 #
 # Script: ssg-suplemental.sh (system-hardening)
 # Description: RHEL 6 Hardening Supplemental to SSG
-# License: GPL (see COPYINGt)
+# License: Apache License, Version 2.0
 # Copyright: Red Hat Consulting, March 2015
-# Author: Frank Caviggia <fcaviggi (at) redhat.com>
+# Author: Frank Caviggia (fcaviggia@gmail.com)
 
 ########################################
 # DISA STIG PAM Configurations
