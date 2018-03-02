@@ -7,10 +7,10 @@
 # This script is NOT SUPPORTED by Red Hat Global Support Services.
 # Please contact Josh Waldman for more information.
 #
-# Author: Frank Caviggia (fcaviggi@redhat.com)
+# Author: Frank Caviggia (fcaviggia@gmail.com)
 # Copyright: Red Hat, (c) 2014
 # Version: 1.2.5
-# License: GPLv2
+# License: Apache License, Version 2.0
 # Description: Kickstart Installation of RHEL 6 with DISA STIG 
 ###############################################################################
 
